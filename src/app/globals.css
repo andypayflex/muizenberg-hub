@@ -1,23 +1,21 @@
 @import "tailwindcss";
 
-:root {
+@theme {
   /* Muizenberg Beach Hut Colors */
-  --hut-red: #E63946;
-  --hut-yellow: #F4A261;
-  --hut-blue: #2A9D8F;
-  --hut-green: #52B788;
-  --hut-white: #FEFAE0;
+  --color-hut-red: #E63946;
+  --color-hut-yellow: #F4A261;
+  --color-hut-teal: #2A9D8F;
+  --color-hut-green: #52B788;
   
   /* Ocean & Beach */
-  --ocean-deep: #1D3557;
-  --ocean-medium: #457B9D;
-  --ocean-light: #A8DADC;
-  --sand: #F5F1E3;
-  --sand-dark: #DDD5C0;
+  --color-ocean-deep: #1D3557;
+  --color-ocean: #457B9D;
+  --color-ocean-light: #A8DADC;
+  --color-sand: #F5F1E3;
+  --color-sand-dark: #DDD5C0;
   
   /* Accent */
-  --coral: #E76F51;
-  --sunset: #F4A261;
+  --color-coral: #E76F51;
 }
 
 * {
@@ -26,38 +24,32 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light;
 }
 
 body {
-  background: linear-gradient(180deg, var(--sand) 0%, #fff 100%);
+  background: linear-gradient(180deg, #F5F1E3 0%, #ffffff 100%);
   min-height: 100vh;
-}
-
-/* Subtle wave pattern for backgrounds */
-.wave-bg {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23A8DADC' fill-opacity='0.3' d='M0,160L48,176C96,192,192,224,288,213.3C384,203,480,149,576,138.7C672,128,768,160,864,181.3C960,203,1056,213,1152,197.3C1248,181,1344,139,1392,117.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: bottom;
-  background-size: 100% 200px;
+  color: #1D3557;
 }
 
 /* Beach hut stripe accent */
 .hut-stripe {
   background: linear-gradient(90deg, 
-    var(--hut-red) 0%, var(--hut-red) 20%,
-    var(--hut-yellow) 20%, var(--hut-yellow) 40%,
-    var(--hut-blue) 40%, var(--hut-blue) 60%,
-    var(--hut-green) 60%, var(--hut-green) 80%,
-    var(--ocean-medium) 80%, var(--ocean-medium) 100%
+    #E63946 0%, #E63946 20%,
+    #F4A261 20%, #F4A261 40%,
+    #2A9D8F 40%, #2A9D8F 60%,
+    #52B788 60%, #52B788 80%,
+    #457B9D 80%, #457B9D 100%
   );
   height: 6px;
 }
 
 /* Card styling */
 .card {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid #DDD5C0;
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(29, 53, 87, 0.08);
   transition: all 0.3s ease;
@@ -70,7 +62,7 @@ body {
 
 /* Buttons */
 .btn-primary {
-  background: linear-gradient(135deg, var(--ocean-medium) 0%, var(--hut-blue) 100%);
+  background: linear-gradient(135deg, #457B9D 0%, #2A9D8F 100%);
   color: white;
   padding: 12px 24px;
   border-radius: 12px;
@@ -78,6 +70,9 @@ body {
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-primary:hover {
@@ -86,43 +81,52 @@ body {
 }
 
 .btn-secondary {
-  background: var(--sand);
-  color: var(--ocean-deep);
+  background: #F5F1E3;
+  color: #1D3557;
   padding: 12px 24px;
   border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
-  border: 2px solid var(--sand-dark);
+  border: 2px solid #DDD5C0;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-secondary:hover {
-  background: var(--sand-dark);
+  background: #DDD5C0;
 }
 
-/* Tags/Chips with beach hut colors */
-.tag-red { background: #FDEAEA; color: var(--hut-red); }
+/* Tags/Chips */
+.tag-red { background: #FDEAEA; color: #E63946; }
 .tag-yellow { background: #FEF3E2; color: #B8860B; }
-.tag-blue { background: #E8F6F5; color: var(--hut-blue); }
-.tag-green { background: #E8F5EC; color: var(--hut-green); }
-.tag-ocean { background: #E3F2FD; color: var(--ocean-medium); }
+.tag-blue { background: #E8F6F5; color: #2A9D8F; }
+.tag-green { background: #E8F5EC; color: #52B788; }
+.tag-ocean { background: #E3F2FD; color: #457B9D; }
 
 /* Input styling */
 input, textarea, select {
-  border: 2px solid var(--sand-dark);
+  border: 2px solid #DDD5C0;
   border-radius: 12px;
   padding: 12px 16px;
   transition: all 0.2s ease;
   background: white;
+  color: #1D3557;
+  width: 100%;
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--ocean-medium);
-  box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.1);
+  border-color: #457B9D;
+  box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.15);
 }
 
-/* Smooth animations */
+input::placeholder, textarea::placeholder {
+  color: #9CA3AF;
+}
+
+/* Animations */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -134,8 +138,18 @@ input:focus, textarea:focus, select:focus {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, var(--ocean-deep) 0%, var(--hut-blue) 100%);
+  background: linear-gradient(135deg, #1D3557 0%, #2A9D8F 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Text colors */
+.text-ocean-deep { color: #1D3557; }
+.text-ocean { color: #457B9D; }
+.text-teal { color: #2A9D8F; }
+.text-muted { color: #6B7280; }
+
+/* Background colors */
+.bg-sand { background-color: #F5F1E3; }
+.bg-sand-dark { background-color: #DDD5C0; }

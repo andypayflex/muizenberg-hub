@@ -99,7 +99,7 @@ export default function BusinessesPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold gradient-text">🏪 Local Directory</h1>
-            <p className="text-[var(--ocean-deep)]/60 mt-1">
+            <p className="text-gray-600 mt-1">
               Support our Muizenberg businesses
             </p>
           </div>
@@ -114,7 +114,7 @@ export default function BusinessesPage() {
         {/* Add Business Form */}
         {showForm && (
           <div className="card p-6 mb-8">
-            <h2 className="text-xl font-semibold text-[var(--ocean-deep)] mb-4">
+            <h2 className="text-xl font-semibold text-ocean-deep mb-4">
               List Your Business
             </h2>
             <form className="grid md:grid-cols-2 gap-4">
@@ -148,8 +148,8 @@ export default function BusinessesPage() {
               onClick={() => setFilter(cat.value)}
               className={`px-4 py-2 rounded-xl font-medium transition-all ${
                 filter === cat.value
-                  ? "bg-[var(--ocean-medium)] text-white shadow-md"
-                  : "bg-white text-[var(--ocean-deep)] hover:bg-[var(--sand)] border border-[var(--sand-dark)]"
+                  ? "bg-teal-600 text-white shadow-md"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
               }`}
             >
               <span className="mr-1">{cat.icon}</span>
@@ -163,7 +163,7 @@ export default function BusinessesPage() {
           {filtered.map((business) => (
             <div key={business.id} className="card p-6">
               <div className="flex justify-between items-start mb-3">
-                <h2 className="text-xl font-semibold text-[var(--ocean-deep)]">
+                <h2 className="text-xl font-semibold text-ocean-deep">
                   {business.name}
                 </h2>
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors[business.category] || "tag-ocean"}`}>
@@ -171,18 +171,18 @@ export default function BusinessesPage() {
                 </span>
               </div>
 
-              <p className="text-[var(--ocean-deep)]/70 mb-4 leading-relaxed">
+              <p className="text-gray-600 mb-4 leading-relaxed">
                 {business.description}
               </p>
 
-              <div className="space-y-2 text-sm text-[var(--ocean-deep)]/60 mb-4">
+              <div className="space-y-2 text-sm text-gray-500 mb-4">
                 <p>📍 {business.address}</p>
                 <p>📞 {business.phone}</p>
                 <p>🕐 {business.hours}</p>
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t border-[var(--sand-dark)]">
-                <span className="text-sm font-medium text-[var(--hut-blue)]">
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <span className="text-sm font-medium text-teal">
                   {business.vibe}
                 </span>
                 <button className="btn-primary text-sm py-2">
@@ -194,11 +194,11 @@ export default function BusinessesPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-12 text-center card p-8 bg-[var(--sand)]/50">
-          <h3 className="text-xl font-semibold text-[var(--ocean-deep)] mb-2">
+        <div className="mt-12 text-center card p-8 bg-amber-50/50">
+          <h3 className="text-xl font-semibold text-ocean-deep mb-2">
             Own a local business?
           </h3>
-          <p className="text-[var(--ocean-deep)]/60 mb-4">
+          <p className="text-gray-600 mb-4">
             Get discovered by your neighbours. Free listing for Muizenberg businesses.
           </p>
           <button onClick={() => setShowForm(true)} className="btn-primary">

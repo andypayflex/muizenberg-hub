@@ -10,7 +10,6 @@ interface EmergencyService {
 }
 
 const emergencyServices: EmergencyService[] = [
-  // Critical
   {
     id: 1,
     name: "Police Emergency",
@@ -35,7 +34,6 @@ const emergencyServices: EmergencyService[] = [
     description: "City of Cape Town Fire",
     priority: "critical",
   },
-  // Local
   {
     id: 4,
     name: "Muizenberg SAPS",
@@ -68,7 +66,6 @@ const emergencyServices: EmergencyService[] = [
     description: "Beach safety updates",
     priority: "local",
   },
-  // Utilities
   {
     id: 8,
     name: "City Power Faults",
@@ -85,7 +82,6 @@ const emergencyServices: EmergencyService[] = [
     description: "Burst pipes, water issues",
     priority: "utility",
   },
-  // Support
   {
     id: 10,
     name: "Poison Control",
@@ -112,19 +108,11 @@ const emergencyServices: EmergencyService[] = [
   },
 ];
 
-const priorityStyles = {
-  critical: "bg-[var(--hut-red)]/10 border-[var(--hut-red)]/30 hover:border-[var(--hut-red)]",
-  local: "bg-[var(--hut-blue)]/10 border-[var(--hut-blue)]/30 hover:border-[var(--hut-blue)]",
-  utility: "bg-[var(--hut-yellow)]/10 border-[var(--hut-yellow)]/30 hover:border-[var(--hut-yellow)]",
-  support: "bg-[var(--hut-green)]/10 border-[var(--hut-green)]/30 hover:border-[var(--hut-green)]",
-};
-
 export default function EmergencyPage() {
   const handleCall = (number: string) => {
     window.location.href = `tel:${number.replace(/[^0-9]/g, "")}`;
   };
 
-  const critical = emergencyServices.filter((s) => s.priority === "critical");
   const local = emergencyServices.filter((s) => s.priority === "local");
   const utility = emergencyServices.filter((s) => s.priority === "utility");
   const support = emergencyServices.filter((s) => s.priority === "support");
@@ -135,28 +123,25 @@ export default function EmergencyPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold gradient-text">🚨 Emergency Services</h1>
-          <p className="text-[var(--ocean-deep)]/60 mt-1">
+          <p className="text-gray-600 mt-1">
             Tap any number to call directly
           </p>
         </div>
 
         {/* Critical Emergency Banner */}
-        <div 
-          className="rounded-2xl p-6 mb-8 text-white"
-          style={{ background: "linear-gradient(135deg, var(--hut-red) 0%, #c1121f 100%)" }}
-        >
+        <div className="rounded-2xl p-6 mb-8 text-white bg-gradient-to-r from-red-600 to-red-500">
           <h2 className="text-xl font-bold mb-2">⚠️ Life-Threatening Emergency?</h2>
-          <p className="text-white/80 mb-4">Call immediately:</p>
+          <p className="text-red-100 mb-4">Call immediately:</p>
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => handleCall("10111")}
-              className="bg-white text-[var(--hut-red)] px-6 py-3 rounded-xl font-bold text-lg hover:bg-red-50 transition-colors"
+              className="bg-white text-red-600 px-6 py-3 rounded-xl font-bold text-lg hover:bg-red-50 transition-colors"
             >
               🚔 Police: 10111
             </button>
             <button
               onClick={() => handleCall("10177")}
-              className="bg-white text-[var(--hut-red)] px-6 py-3 rounded-xl font-bold text-lg hover:bg-red-50 transition-colors"
+              className="bg-white text-red-600 px-6 py-3 rounded-xl font-bold text-lg hover:bg-red-50 transition-colors"
             >
               🚑 Ambulance: 10177
             </button>
@@ -165,7 +150,7 @@ export default function EmergencyPage() {
 
         {/* Local Muizenberg Services */}
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-[var(--ocean-deep)] mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-ocean-deep mb-4 flex items-center gap-2">
             <span>🏖️</span> Local Muizenberg
           </h2>
           <div className="grid sm:grid-cols-2 gap-3">
@@ -173,14 +158,14 @@ export default function EmergencyPage() {
               <button
                 key={service.id}
                 onClick={() => handleCall(service.number)}
-                className={`p-4 rounded-xl border-2 transition-all text-left ${priorityStyles.local}`}
+                className="card p-4 text-left hover:border-teal-300 border-2 border-transparent transition-all"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{service.icon}</span>
                   <div>
-                    <p className="font-semibold text-[var(--ocean-deep)]">{service.name}</p>
-                    <p className="text-xl font-bold text-[var(--hut-blue)]">{service.number}</p>
-                    <p className="text-xs text-[var(--ocean-deep)]/60">{service.description}</p>
+                    <p className="font-semibold text-ocean-deep">{service.name}</p>
+                    <p className="text-xl font-bold text-teal">{service.number}</p>
+                    <p className="text-xs text-gray-500">{service.description}</p>
                   </div>
                 </div>
               </button>
@@ -190,7 +175,7 @@ export default function EmergencyPage() {
 
         {/* Utilities */}
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-[var(--ocean-deep)] mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-ocean-deep mb-4 flex items-center gap-2">
             <span>🔧</span> Utilities
           </h2>
           <div className="grid sm:grid-cols-2 gap-3">
@@ -198,14 +183,14 @@ export default function EmergencyPage() {
               <button
                 key={service.id}
                 onClick={() => handleCall(service.number)}
-                className={`p-4 rounded-xl border-2 transition-all text-left ${priorityStyles.utility}`}
+                className="card p-4 text-left hover:border-amber-300 border-2 border-transparent transition-all"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{service.icon}</span>
                   <div>
-                    <p className="font-semibold text-[var(--ocean-deep)]">{service.name}</p>
-                    <p className="text-xl font-bold text-[#B8860B]">{service.number}</p>
-                    <p className="text-xs text-[var(--ocean-deep)]/60">{service.description}</p>
+                    <p className="font-semibold text-ocean-deep">{service.name}</p>
+                    <p className="text-xl font-bold text-amber-600">{service.number}</p>
+                    <p className="text-xs text-gray-500">{service.description}</p>
                   </div>
                 </div>
               </button>
@@ -215,7 +200,7 @@ export default function EmergencyPage() {
 
         {/* Support Lines */}
         <section className="mb-8">
-          <h2 className="text-lg font-semibold text-[var(--ocean-deep)] mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-ocean-deep mb-4 flex items-center gap-2">
             <span>💚</span> Support Lines (24/7)
           </h2>
           <div className="grid sm:grid-cols-2 gap-3">
@@ -223,14 +208,14 @@ export default function EmergencyPage() {
               <button
                 key={service.id}
                 onClick={() => handleCall(service.number)}
-                className={`p-4 rounded-xl border-2 transition-all text-left ${priorityStyles.support}`}
+                className="card p-4 text-left hover:border-emerald-300 border-2 border-transparent transition-all"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{service.icon}</span>
                   <div>
-                    <p className="font-semibold text-[var(--ocean-deep)]">{service.name}</p>
-                    <p className="text-xl font-bold text-[var(--hut-green)]">{service.number}</p>
-                    <p className="text-xs text-[var(--ocean-deep)]/60">{service.description}</p>
+                    <p className="font-semibold text-ocean-deep">{service.name}</p>
+                    <p className="text-xl font-bold text-emerald-600">{service.number}</p>
+                    <p className="text-xs text-gray-500">{service.description}</p>
                   </div>
                 </div>
               </button>
@@ -239,11 +224,11 @@ export default function EmergencyPage() {
         </section>
 
         {/* Safety Tips */}
-        <div className="card p-6 bg-[var(--sand)]/50">
-          <h3 className="font-semibold text-[var(--ocean-deep)] mb-3">
+        <div className="card p-6 bg-sky-50/50">
+          <h3 className="font-semibold text-ocean-deep mb-3">
             💡 Muizenberg Safety Tips
           </h3>
-          <ul className="text-sm text-[var(--ocean-deep)]/70 space-y-2">
+          <ul className="text-sm text-gray-600 space-y-2">
             <li>🦈 Check Shark Spotter flags before swimming (White = safe, Red = shark spotted)</li>
             <li>🌊 Swim between the flags at lifeguard-patrolled areas</li>
             <li>🚗 Don&apos;t leave valuables visible in parked cars</li>

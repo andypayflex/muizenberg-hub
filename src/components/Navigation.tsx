@@ -17,15 +17,14 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Beach hut stripe accent at top */}
       <div className="hut-stripe" />
       
-      <nav className="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-[var(--sand-dark)]">
+      <nav className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-sand-dark">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2 group">
               <span className="text-2xl">🏖️</span>
-              <span className="font-bold text-xl text-[var(--ocean-deep)] group-hover:text-[var(--hut-blue)] transition-colors">
+              <span className="font-bold text-xl text-ocean-deep group-hover:text-teal transition-colors">
                 Muizenberg Hub
               </span>
             </Link>
@@ -36,7 +35,7 @@ export default function Navigation() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="px-4 py-2 rounded-xl text-[var(--ocean-deep)] hover:bg-[var(--sand)] transition-all duration-200 flex items-center gap-2 font-medium"
+                  className="px-4 py-2 rounded-xl text-ocean-deep hover:bg-sand transition-all duration-200 flex items-center gap-2 font-medium"
                 >
                   <span>{item.icon}</span>
                   <span>{item.label}</span>
@@ -46,7 +45,7 @@ export default function Navigation() {
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 rounded-xl hover:bg-[var(--sand)] transition-colors text-2xl"
+              className="md:hidden p-2 rounded-xl hover:bg-sand transition-colors text-2xl"
               onClick={() => setIsOpen(!isOpen)}
             >
               {isOpen ? "✕" : "☰"}
@@ -55,12 +54,12 @@ export default function Navigation() {
 
           {/* Mobile Nav */}
           {isOpen && (
-            <div className="md:hidden pb-4 space-y-1 border-t border-[var(--sand-dark)] pt-4">
+            <div className="md:hidden pb-4 space-y-1 border-t border-sand-dark pt-4">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="block px-4 py-3 rounded-xl hover:bg-[var(--sand)] transition-colors text-[var(--ocean-deep)] font-medium"
+                  className="block px-4 py-3 rounded-xl hover:bg-sand transition-colors text-ocean-deep font-medium"
                   onClick={() => setIsOpen(false)}
                 >
                   <span className="mr-3">{item.icon}</span>

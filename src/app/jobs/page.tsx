@@ -74,7 +74,7 @@ export default function JobsPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold gradient-text">💼 Jobs Board</h1>
-            <p className="text-[var(--ocean-deep)]/60 mt-1">
+            <p className="text-gray-600 mt-1">
               Work local, live local in Muizenberg
             </p>
           </div>
@@ -89,7 +89,7 @@ export default function JobsPage() {
         {/* Post Form */}
         {showForm && (
           <div className="card p-6 mb-8">
-            <h2 className="text-xl font-semibold text-[var(--ocean-deep)] mb-4">
+            <h2 className="text-xl font-semibold text-ocean-deep mb-4">
               Post a New Job
             </h2>
             <form className="grid md:grid-cols-2 gap-4">
@@ -122,23 +122,23 @@ export default function JobsPage() {
             <div key={job.id} className="card p-6">
               <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
                 <div>
-                  <h2 className="text-xl font-semibold text-[var(--ocean-deep)]">
+                  <h2 className="text-xl font-semibold text-ocean-deep">
                     {job.title}
                   </h2>
-                  <p className="text-[var(--hut-blue)] font-medium">{job.company}</p>
+                  <p className="text-teal font-medium">{job.company}</p>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${typeColors[job.type] || "tag-ocean"}`}>
                   {job.type}
                 </span>
               </div>
               
-              <div className="flex flex-wrap gap-4 mt-3 text-sm text-[var(--ocean-deep)]/60">
+              <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-500">
                 <span>📍 {job.location}</span>
                 <span>💰 {job.salary}</span>
                 <span>🕐 {job.posted}</span>
               </div>
               
-              <p className="mt-4 text-[var(--ocean-deep)]/80 leading-relaxed">
+              <p className="mt-4 text-gray-700 leading-relaxed">
                 {job.description}
               </p>
               
@@ -155,7 +155,7 @@ export default function JobsPage() {
         </div>
 
         {/* Empty state hint */}
-        <div className="mt-8 text-center text-[var(--ocean-deep)]/50">
+        <div className="mt-8 text-center text-gray-500">
           <p>Know of a job opening? Help your community — post it above! 🤙</p>
         </div>
       </div>

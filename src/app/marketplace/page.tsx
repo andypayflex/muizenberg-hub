@@ -111,7 +111,7 @@ export default function MarketplacePage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold gradient-text">🛒 Marketplace</h1>
-            <p className="text-[var(--ocean-deep)]/60 mt-1">
+            <p className="text-gray-600 mt-1">
               Buy & sell with your Muizenberg neighbours
             </p>
           </div>
@@ -126,7 +126,7 @@ export default function MarketplacePage() {
         {/* Sell Form */}
         {showForm && (
           <div className="card p-6 mb-8">
-            <h2 className="text-xl font-semibold text-[var(--ocean-deep)] mb-4">
+            <h2 className="text-xl font-semibold text-ocean-deep mb-4">
               List an Item
             </h2>
             <form className="grid md:grid-cols-2 gap-4">
@@ -165,8 +165,8 @@ export default function MarketplacePage() {
               onClick={() => setFilter(cat.value)}
               className={`px-4 py-2 rounded-xl font-medium transition-all ${
                 filter === cat.value
-                  ? "bg-[var(--hut-yellow)] text-[var(--ocean-deep)] shadow-md"
-                  : "bg-white text-[var(--ocean-deep)] hover:bg-[var(--sand)] border border-[var(--sand-dark)]"
+                  ? "bg-amber-500 text-white shadow-md"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
               }`}
             >
               <span className="mr-1">{cat.icon}</span>
@@ -180,16 +180,16 @@ export default function MarketplacePage() {
           {filtered.map((item) => (
             <div key={item.id} className="card overflow-hidden">
               {/* Image placeholder with emoji */}
-              <div className="h-40 bg-gradient-to-br from-[var(--sand)] to-[var(--sand-dark)] flex items-center justify-center">
+              <div className="h-40 bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center">
                 <span className="text-6xl">{item.emoji}</span>
               </div>
 
               <div className="p-5">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-[var(--ocean-deep)] leading-tight">
+                  <h3 className="font-semibold text-ocean-deep leading-tight">
                     {item.title}
                   </h3>
-                  <span className="text-lg font-bold text-[var(--hut-blue)] whitespace-nowrap ml-2">
+                  <span className="text-lg font-bold text-teal whitespace-nowrap ml-2">
                     {item.price}
                   </span>
                 </div>
@@ -200,11 +200,11 @@ export default function MarketplacePage() {
                   </span>
                 </div>
 
-                <p className="text-sm text-[var(--ocean-deep)]/70 mb-3 line-clamp-2">
+                <p className="text-sm text-gray-600 mb-3 line-clamp-2">
                   {item.description}
                 </p>
 
-                <div className="text-xs text-[var(--ocean-deep)]/50 mb-4">
+                <div className="text-xs text-gray-500 mb-4">
                   <p>👤 {item.seller} • 🕐 {item.posted}</p>
                 </div>
 
@@ -217,11 +217,11 @@ export default function MarketplacePage() {
         </div>
 
         {/* Tips */}
-        <div className="mt-12 card p-6 bg-[var(--sand)]/30">
-          <h3 className="font-semibold text-[var(--ocean-deep)] mb-2">
+        <div className="mt-12 card p-6 bg-amber-50/50">
+          <h3 className="font-semibold text-ocean-deep mb-2">
             💡 Marketplace Tips
           </h3>
-          <ul className="text-sm text-[var(--ocean-deep)]/70 space-y-1">
+          <ul className="text-sm text-gray-600 space-y-1">
             <li>• Meet in public places for exchanges</li>
             <li>• Cash is king in Muiz 💵</li>
             <li>• Check items before paying</li>

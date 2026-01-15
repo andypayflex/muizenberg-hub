@@ -84,7 +84,7 @@ const samplePosts: Post[] = [
   },
 ];
 
-const typeStyles = {
+const typeStyles: Record<string, { bg: string; icon: string }> = {
   event: { bg: "tag-green", icon: "📅" },
   announcement: { bg: "tag-blue", icon: "📢" },
   discussion: { bg: "tag-ocean", icon: "💬" },
@@ -107,7 +107,7 @@ export default function CommunityPage() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold gradient-text">🏄 Community Feed</h1>
-            <p className="text-[var(--ocean-deep)]/60 mt-1">
+            <p className="text-gray-600 mt-1">
               What&apos;s happening in Muizenberg
             </p>
           </div>
@@ -122,24 +122,23 @@ export default function CommunityPage() {
         {/* Post Form */}
         {showForm && (
           <div className="card p-6 mb-8">
-            <h2 className="text-xl font-semibold text-[var(--ocean-deep)] mb-4">
+            <h2 className="text-xl font-semibold text-ocean-deep mb-4">
               Share with the Community
             </h2>
             <form className="space-y-4">
-              <div className="flex gap-4">
-                <select className="flex-1">
+              <div className="grid sm:grid-cols-2 gap-4">
+                <select>
                   <option value="discussion">💬 Discussion</option>
                   <option value="event">📅 Event</option>
                   <option value="announcement">📢 Announcement</option>
                   <option value="alert">⚠️ Alert</option>
                 </select>
-                <input type="text" placeholder="Your Name" className="flex-1" />
+                <input type="text" placeholder="Your Name" />
               </div>
-              <input type="text" placeholder="Title" className="w-full" />
+              <input type="text" placeholder="Title" />
               <textarea
                 placeholder="What's on your mind, Muizenberg?"
                 rows={4}
-                className="w-full"
               />
               <button type="submit" className="btn-primary">
                 Post
@@ -156,8 +155,8 @@ export default function CommunityPage() {
               onClick={() => setFilter(type.value)}
               className={`px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-1 ${
                 filter === type.value
-                  ? "bg-[var(--ocean-medium)] text-white shadow-md"
-                  : "bg-white text-[var(--ocean-deep)] hover:bg-[var(--sand)] border border-[var(--sand-dark)]"
+                  ? "bg-teal-600 text-white shadow-md"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200"
               }`}
             >
               <span>{type.icon}</span>
@@ -176,25 +175,25 @@ export default function CommunityPage() {
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${style.bg}`}>
                     {style.icon} {post.type.charAt(0).toUpperCase() + post.type.slice(1)}
                   </span>
-                  <span className="text-sm text-[var(--ocean-deep)]/50">{post.posted}</span>
+                  <span className="text-sm text-gray-500">{post.posted}</span>
                 </div>
 
-                <h2 className="text-xl font-semibold text-[var(--ocean-deep)] mb-2">
+                <h2 className="text-xl font-semibold text-ocean-deep mb-2">
                   {post.title}
                 </h2>
-                <p className="text-[var(--ocean-deep)]/70 leading-relaxed mb-4">
+                <p className="text-gray-600 leading-relaxed mb-4">
                   {post.content}
                 </p>
 
-                <div className="flex items-center justify-between pt-4 border-t border-[var(--sand-dark)]">
-                  <span className="text-sm text-[var(--ocean-deep)]/60">
-                    Posted by <span className="font-medium">{post.author}</span>
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <span className="text-sm text-gray-500">
+                    Posted by <span className="font-medium text-gray-700">{post.author}</span>
                   </span>
                   <div className="flex gap-4">
-                    <button className="flex items-center gap-1 text-[var(--ocean-deep)]/60 hover:text-[var(--hut-red)] transition-colors">
+                    <button className="flex items-center gap-1 text-gray-500 hover:text-red-500 transition-colors">
                       ❤️ {post.likes}
                     </button>
-                    <button className="flex items-center gap-1 text-[var(--ocean-deep)]/60 hover:text-[var(--hut-blue)] transition-colors">
+                    <button className="flex items-center gap-1 text-gray-500 hover:text-teal transition-colors">
                       💬 {post.comments}
                     </button>
                   </div>
@@ -205,21 +204,18 @@ export default function CommunityPage() {
         </div>
 
         {/* Subscribe Banner */}
-        <div 
-          className="mt-8 rounded-2xl p-8 text-center text-white"
-          style={{ background: "linear-gradient(135deg, var(--ocean-deep) 0%, var(--ocean-medium) 100%)" }}
-        >
+        <div className="mt-8 rounded-2xl p-8 text-center text-white bg-gradient-to-r from-slate-800 to-slate-700">
           <h3 className="text-xl font-bold mb-2">🔔 Stay in the Loop</h3>
-          <p className="text-white/80 mb-4">
+          <p className="text-gray-300 mb-4">
             Get notified about important community updates and events
           </p>
           <div className="flex gap-2 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Your email"
-              className="flex-1 text-[var(--ocean-deep)]"
+              className="flex-1"
             />
-            <button className="bg-white text-[var(--ocean-deep)] px-6 py-3 rounded-xl font-semibold hover:bg-[var(--sand)] transition-colors">
+            <button className="bg-white text-slate-800 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap">
               Subscribe
             </button>
           </div>
