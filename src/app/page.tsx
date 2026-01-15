@@ -39,10 +39,10 @@ const features = [
 ];
 
 const recentActivity = [
-  { icon: "🏄", text: "Surf lesson bookings open for February", time: "2 hours ago" },
-  { icon: "💼", text: "Barista needed at Café Roux", time: "5 hours ago" },
-  { icon: "🏪", text: "New listing: Muizenberg Yoga Studio", time: "Yesterday" },
-  { icon: "📢", text: "Beach cleanup this Saturday 8am", time: "Yesterday" },
+  { icon: "🏄", text: "Surf Emporium holiday lessons now booking", time: "2 hours ago" },
+  { icon: "💼", text: "Barista needed at Empire Cafe", time: "5 hours ago" },
+  { icon: "🏪", text: "Gary's Surf School - 35 years of stoke!", time: "Yesterday" },
+  { icon: "📢", text: "Beach cleanup at Surfer's Corner Saturday 8am", time: "Yesterday" },
 ];
 
 export default function Home() {
