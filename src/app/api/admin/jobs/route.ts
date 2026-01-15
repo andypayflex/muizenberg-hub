@@ -6,7 +6,7 @@ export async function GET() {
   if (!await isAdmin()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const jobs = adminGetAllJobs();
+  const jobs = await adminGetAllJobs();
   return NextResponse.json(jobs);
 }
 
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   }
   
   const data = await request.json();
-  const id = createJob(data);
+  const id = await createJob(data);
   return NextResponse.json({ success: true, id });
 }
 
@@ -26,6 +26,6 @@ export async function DELETE(request: NextRequest) {
   }
   
   const { id } = await request.json();
-  deleteJob(id);
+  await deleteJob(id);
   return NextResponse.json({ success: true });
 }

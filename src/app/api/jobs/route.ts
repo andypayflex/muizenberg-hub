@@ -3,8 +3,8 @@ import { getAllJobs, createJob, seedDatabase } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 
 export async function GET() {
-  seedDatabase();
-  const jobs = getAllJobs();
+  await seedDatabase();
+  const jobs = await getAllJobs();
   return NextResponse.json(jobs);
 }
 
@@ -15,6 +15,6 @@ export async function POST(request: NextRequest) {
   }
 
   const data = await request.json();
-  const id = createJob(data);
+  const id = await createJob(data);
   return NextResponse.json({ success: true, id });
 }

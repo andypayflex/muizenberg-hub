@@ -6,7 +6,7 @@ export async function GET() {
   if (!await isAdmin()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const posts = adminGetAllPosts();
+  const posts = await adminGetAllPosts();
   return NextResponse.json(posts);
 }
 
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   }
   
   const data = await request.json();
-  const id = createPost(data);
+  const id = await createPost(data);
   return NextResponse.json({ success: true, id });
 }
 
@@ -26,6 +26,6 @@ export async function DELETE(request: NextRequest) {
   }
   
   const { id } = await request.json();
-  deletePost(id);
+  await deletePost(id);
   return NextResponse.json({ success: true });
 }

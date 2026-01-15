@@ -6,7 +6,7 @@ export async function GET() {
   if (!await isAdmin()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const businesses = adminGetAllBusinesses();
+  const businesses = await adminGetAllBusinesses();
   return NextResponse.json(businesses);
 }
 
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   }
   
   const data = await request.json();
-  const id = createBusiness(data);
+  const id = await createBusiness(data);
   return NextResponse.json({ success: true, id });
 }
 
@@ -26,7 +26,7 @@ export async function DELETE(request: NextRequest) {
   }
   
   const { id } = await request.json();
-  deleteBusiness(id);
+  await deleteBusiness(id);
   return NextResponse.json({ success: true });
 }
 
@@ -36,6 +36,6 @@ export async function PATCH(request: NextRequest) {
   }
   
   const { id, ...data } = await request.json();
-  updateBusiness(id, data);
+  await updateBusiness(id, data);
   return NextResponse.json({ success: true });
 }

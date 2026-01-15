@@ -4,7 +4,7 @@ import { signToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    seedDatabase();
+    await seedDatabase();
     
     const { email, password, name } = await request.json();
 
@@ -16,14 +16,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
     }
 
-    // Check if user exists
-    const existing = getUserByEmail(email);
+    const existing = await getUserByEmail(email);
     if (existing) {
       return NextResponse.json({ error: "Email already registered" }, { status: 400 });
     }
 
-    // Create user
-    const userId = createUser(email, password, name, "user");
+    const userId = await createUser(email, password, name, "user");
 
     const token = signToken({
       userId,
@@ -40,7 +38,7 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return response;

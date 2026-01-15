@@ -6,7 +6,7 @@ export async function GET() {
   if (!await isAdmin()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const items = adminGetAllMarketplaceItems();
+  const items = await adminGetAllMarketplaceItems();
   return NextResponse.json(items);
 }
 
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   }
   
   const data = await request.json();
-  const id = createMarketplaceItem(data);
+  const id = await createMarketplaceItem(data);
   return NextResponse.json({ success: true, id });
 }
 
@@ -26,6 +26,6 @@ export async function DELETE(request: NextRequest) {
   }
   
   const { id } = await request.json();
-  deleteMarketplaceItem(id);
+  await deleteMarketplaceItem(id);
   return NextResponse.json({ success: true });
 }

@@ -3,8 +3,8 @@ import { getAllMarketplaceItems, createMarketplaceItem, seedDatabase } from "@/l
 import { getSession } from "@/lib/auth";
 
 export async function GET() {
-  seedDatabase();
-  const items = getAllMarketplaceItems();
+  await seedDatabase();
+  const items = await getAllMarketplaceItems();
   return NextResponse.json(items);
 }
 
@@ -15,6 +15,6 @@ export async function POST(request: NextRequest) {
   }
 
   const data = await request.json();
-  const id = createMarketplaceItem(data);
+  const id = await createMarketplaceItem(data);
   return NextResponse.json({ success: true, id });
 }
