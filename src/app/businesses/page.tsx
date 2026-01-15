@@ -10,141 +10,201 @@ interface Business {
   phone: string;
   hours: string;
   description: string;
-  rating: number;
+  vibe: string;
 }
 
-const categories = ["All", "Food & Dining", "Retail", "Services", "Health", "Auto", "Other"];
+const categories = [
+  { value: "All", icon: "🏪" },
+  { value: "Food & Coffee", icon: "☕" },
+  { value: "Surf & Beach", icon: "🏄" },
+  { value: "Wellness", icon: "🧘" },
+  { value: "Retail", icon: "🛍️" },
+  { value: "Services", icon: "🔧" },
+];
 
 const sampleBusinesses: Business[] = [
   {
     id: 1,
-    name: "Joe's Auto Repair",
-    category: "Auto",
-    address: "45 Industrial Road",
-    phone: "011-123-4567",
-    hours: "Mon-Fri 8am-5pm",
-    description: "Quality auto repairs and servicing. All makes and models.",
-    rating: 4.5,
+    name: "Café Roux",
+    category: "Food & Coffee",
+    address: "30 Beach Road",
+    phone: "021-788-1234",
+    hours: "7am - 4pm daily",
+    description: "Legendary Muizenberg café. Great coffee, even better people watching. Right on the beachfront.",
+    vibe: "☕ Chill vibes",
   },
   {
     id: 2,
-    name: "Fresh Bakery",
-    category: "Food & Dining",
-    address: "12 Main Street",
-    phone: "011-234-5678",
-    hours: "Daily 6am-6pm",
-    description: "Fresh bread, pastries, and cakes baked daily.",
-    rating: 4.8,
+    name: "Gary's Surf School",
+    category: "Surf & Beach",
+    address: "Surfer's Corner",
+    phone: "082-555-1234",
+    hours: "Sunrise to sunset",
+    description: "Learn to surf with the friendliest instructors in Muiz. All levels welcome.",
+    vibe: "🤙 Stoked",
   },
   {
     id: 3,
-    name: "Community Pharmacy",
-    category: "Health",
-    address: "78 Centre Ave",
-    phone: "011-345-6789",
-    hours: "Mon-Sat 8am-8pm, Sun 9am-1pm",
-    description: "Your trusted local pharmacy. Prescriptions and health advice.",
-    rating: 4.2,
+    name: "Tiger's Milk",
+    category: "Food & Coffee",
+    address: "Beach Road",
+    phone: "021-788-5678",
+    hours: "11am - late",
+    description: "Burgers, cocktails, and sunset views. Perfect post-surf stop.",
+    vibe: "🍔 Good times",
   },
   {
     id: 4,
-    name: "Quick Print",
+    name: "Muizenberg Yoga",
+    category: "Wellness",
+    address: "York Road",
+    phone: "072-123-4567",
+    hours: "Various classes",
+    description: "Beach yoga, studio sessions, and retreats. Find your flow in our beautiful space.",
+    vibe: "🧘 Peaceful",
+  },
+  {
+    id: 5,
+    name: "Sunrise Pharmacy",
     category: "Services",
-    address: "23 Business Park",
-    phone: "011-456-7890",
-    hours: "Mon-Fri 8am-5pm",
-    description: "Printing, copying, binding, and design services.",
-    rating: 4.0,
+    address: "Sunrise Circle",
+    phone: "021-788-2345",
+    hours: "8am - 7pm Mon-Sat",
+    description: "Your local pharmacy. Prescriptions, health advice, and a smile.",
+    vibe: "💊 Helpful",
   },
 ];
+
+const categoryColors: Record<string, string> = {
+  "Food & Coffee": "tag-yellow",
+  "Surf & Beach": "tag-blue",
+  "Wellness": "tag-green",
+  "Retail": "tag-ocean",
+  "Services": "tag-red",
+};
 
 export default function BusinessesPage() {
   const [businesses] = useState<Business[]>(sampleBusinesses);
   const [filter, setFilter] = useState("All");
   const [showForm, setShowForm] = useState(false);
 
-  const filtered = filter === "All" 
-    ? businesses 
-    : businesses.filter(b => b.category === filter);
+  const filtered = filter === "All"
+    ? businesses
+    : businesses.filter((b) => b.category === filter);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">🏪 Business Directory</h1>
-          <p className="text-gray-600">Discover local businesses and services</p>
-        </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors font-medium"
-        >
-          + Add Business
-        </button>
-      </div>
-
-      {showForm && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">Register Your Business</h2>
-          <form className="grid md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Business Name" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none" />
-            <select className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none">
-              {categories.slice(1).map(cat => (
-                <option key={cat}>{cat}</option>
-              ))}
-            </select>
-            <input type="text" placeholder="Address" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none" />
-            <input type="text" placeholder="Phone Number" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none" />
-            <input type="text" placeholder="Business Hours" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none" />
-            <input type="text" placeholder="Website (optional)" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none" />
-            <textarea placeholder="Description" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-purple-500 outline-none md:col-span-2" rows={3} />
-            <button type="submit" className="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors md:col-span-2">
-              Submit Business
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setFilter(cat)}
-            className={`px-4 py-2 rounded-full transition-colors ${
-              filter === cat
-                ? "bg-purple-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        {filtered.map((business) => (
-          <div key={business.id} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
-            <div className="flex justify-between items-start">
-              <h2 className="text-xl font-semibold text-purple-600">{business.name}</h2>
-              <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">
-                {business.category}
-              </span>
-            </div>
-            <div className="mt-2 flex items-center gap-1">
-              {"⭐".repeat(Math.floor(business.rating))}
-              <span className="text-gray-600 text-sm ml-1">{business.rating}</span>
-            </div>
-            <p className="mt-3 text-gray-600">{business.description}</p>
-            <div className="mt-4 space-y-1 text-sm text-gray-600">
-              <p>📍 {business.address}</p>
-              <p>📞 {business.phone}</p>
-              <p>🕐 {business.hours}</p>
-            </div>
-            <button className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-              Contact
-            </button>
+    <div className="min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold gradient-text">🏪 Local Directory</h1>
+            <p className="text-[var(--ocean-deep)]/60 mt-1">
+              Support our Muizenberg businesses
+            </p>
           </div>
-        ))}
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="btn-primary"
+          >
+            + Add Your Business
+          </button>
+        </div>
+
+        {/* Add Business Form */}
+        {showForm && (
+          <div className="card p-6 mb-8">
+            <h2 className="text-xl font-semibold text-[var(--ocean-deep)] mb-4">
+              List Your Business
+            </h2>
+            <form className="grid md:grid-cols-2 gap-4">
+              <input type="text" placeholder="Business Name" />
+              <select>
+                {categories.slice(1).map((cat) => (
+                  <option key={cat.value}>{cat.icon} {cat.value}</option>
+                ))}
+              </select>
+              <input type="text" placeholder="Address" />
+              <input type="text" placeholder="Phone Number" />
+              <input type="text" placeholder="Business Hours" />
+              <input type="text" placeholder="Website (optional)" />
+              <textarea
+                placeholder="Tell the community about your business..."
+                className="md:col-span-2"
+                rows={3}
+              />
+              <button type="submit" className="btn-primary md:col-span-2">
+                Submit Listing
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {categories.map((cat) => (
+            <button
+              key={cat.value}
+              onClick={() => setFilter(cat.value)}
+              className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                filter === cat.value
+                  ? "bg-[var(--ocean-medium)] text-white shadow-md"
+                  : "bg-white text-[var(--ocean-deep)] hover:bg-[var(--sand)] border border-[var(--sand-dark)]"
+              }`}
+            >
+              <span className="mr-1">{cat.icon}</span>
+              {cat.value}
+            </button>
+          ))}
+        </div>
+
+        {/* Business Grid */}
+        <div className="grid md:grid-cols-2 gap-6">
+          {filtered.map((business) => (
+            <div key={business.id} className="card p-6">
+              <div className="flex justify-between items-start mb-3">
+                <h2 className="text-xl font-semibold text-[var(--ocean-deep)]">
+                  {business.name}
+                </h2>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${categoryColors[business.category] || "tag-ocean"}`}>
+                  {business.category}
+                </span>
+              </div>
+
+              <p className="text-[var(--ocean-deep)]/70 mb-4 leading-relaxed">
+                {business.description}
+              </p>
+
+              <div className="space-y-2 text-sm text-[var(--ocean-deep)]/60 mb-4">
+                <p>📍 {business.address}</p>
+                <p>📞 {business.phone}</p>
+                <p>🕐 {business.hours}</p>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-[var(--sand-dark)]">
+                <span className="text-sm font-medium text-[var(--hut-blue)]">
+                  {business.vibe}
+                </span>
+                <button className="btn-primary text-sm py-2">
+                  Contact
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="mt-12 text-center card p-8 bg-[var(--sand)]/50">
+          <h3 className="text-xl font-semibold text-[var(--ocean-deep)] mb-2">
+            Own a local business?
+          </h3>
+          <p className="text-[var(--ocean-deep)]/60 mb-4">
+            Get discovered by your neighbours. Free listing for Muizenberg businesses.
+          </p>
+          <button onClick={() => setShowForm(true)} className="btn-primary">
+            Add Your Business
+          </button>
+        </div>
       </div>
     </div>
   );

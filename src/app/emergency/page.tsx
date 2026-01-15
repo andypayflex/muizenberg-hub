@@ -6,171 +6,251 @@ interface EmergencyService {
   number: string;
   icon: string;
   description: string;
-  available: string;
+  priority: "critical" | "local" | "utility" | "support";
 }
 
 const emergencyServices: EmergencyService[] = [
+  // Critical
   {
     id: 1,
     name: "Police Emergency",
     number: "10111",
     icon: "🚔",
-    description: "South African Police Service emergency line",
-    available: "24/7",
+    description: "SAPS emergency line",
+    priority: "critical",
   },
   {
     id: 2,
     name: "Ambulance",
     number: "10177",
     icon: "🚑",
-    description: "Medical emergencies and ambulance services",
-    available: "24/7",
+    description: "Medical emergencies",
+    priority: "critical",
   },
   {
     id: 3,
-    name: "Fire Department",
-    number: "10177",
+    name: "Fire & Rescue",
+    number: "021-590-1900",
     icon: "🚒",
-    description: "Fire emergencies and rescue services",
-    available: "24/7",
+    description: "City of Cape Town Fire",
+    priority: "critical",
   },
+  // Local
   {
     id: 4,
-    name: "Local Police Station",
-    number: "011-123-4567",
+    name: "Muizenberg SAPS",
+    number: "021-787-9000",
     icon: "👮",
-    description: "Your local SAPS station for non-emergencies",
-    available: "24/7",
+    description: "Local police station",
+    priority: "local",
   },
   {
     id: 5,
-    name: "Community Watch",
-    number: "011-234-5678",
+    name: "Muizenberg Neighbourhood Watch",
+    number: "082-123-4567",
     icon: "👁️",
-    description: "Local neighborhood watch patrol",
-    available: "6pm - 6am",
+    description: "Community patrol",
+    priority: "local",
   },
   {
     id: 6,
-    name: "Local Clinic",
-    number: "011-345-6789",
-    icon: "🏥",
-    description: "Community health clinic",
-    available: "Mon-Fri 7am-7pm",
+    name: "NSRI Station 16",
+    number: "021-788-5375",
+    icon: "⛵",
+    description: "Sea rescue (Muizenberg/Fish Hoek)",
+    priority: "local",
   },
   {
     id: 7,
-    name: "Electricity Faults",
-    number: "0800-111-222",
-    icon: "⚡",
-    description: "Report power outages and electrical faults",
-    available: "24/7",
+    name: "Shark Spotters",
+    number: "078-174-4757",
+    icon: "🦈",
+    description: "Beach safety updates",
+    priority: "local",
   },
+  // Utilities
   {
     id: 8,
-    name: "Water Emergency",
-    number: "0800-333-444",
-    icon: "💧",
-    description: "Report burst pipes and water issues",
-    available: "24/7",
+    name: "City Power Faults",
+    number: "0860-103-089",
+    icon: "⚡",
+    description: "Electricity outages",
+    priority: "utility",
   },
   {
     id: 9,
-    name: "Poison Hotline",
-    number: "0861-555-777",
-    icon: "☠️",
-    description: "Poison control center",
-    available: "24/7",
+    name: "Water & Sanitation",
+    number: "0860-103-089",
+    icon: "💧",
+    description: "Burst pipes, water issues",
+    priority: "utility",
   },
+  // Support
   {
     id: 10,
-    name: "Child Protection",
-    number: "0800-055-555",
-    icon: "👶",
-    description: "Childline South Africa",
-    available: "24/7",
+    name: "Poison Control",
+    number: "0861-555-777",
+    icon: "☠️",
+    description: "24/7 poison hotline",
+    priority: "support",
   },
   {
     id: 11,
-    name: "Gender-Based Violence",
-    number: "0800-150-150",
-    icon: "🤝",
-    description: "GBV Command Centre",
-    available: "24/7",
+    name: "Childline SA",
+    number: "0800-055-555",
+    icon: "👶",
+    description: "Child protection",
+    priority: "support",
   },
   {
     id: 12,
-    name: "Mental Health Line",
+    name: "SADAG Mental Health",
     number: "0800-567-567",
     icon: "💚",
-    description: "SADAG mental health support",
-    available: "24/7",
+    description: "24/7 mental health support",
+    priority: "support",
   },
 ];
 
+const priorityStyles = {
+  critical: "bg-[var(--hut-red)]/10 border-[var(--hut-red)]/30 hover:border-[var(--hut-red)]",
+  local: "bg-[var(--hut-blue)]/10 border-[var(--hut-blue)]/30 hover:border-[var(--hut-blue)]",
+  utility: "bg-[var(--hut-yellow)]/10 border-[var(--hut-yellow)]/30 hover:border-[var(--hut-yellow)]",
+  support: "bg-[var(--hut-green)]/10 border-[var(--hut-green)]/30 hover:border-[var(--hut-green)]",
+};
+
 export default function EmergencyPage() {
   const handleCall = (number: string) => {
-    window.location.href = `tel:${number.replace(/-/g, "")}`;
+    window.location.href = `tel:${number.replace(/[^0-9]/g, "")}`;
   };
 
+  const critical = emergencyServices.filter((s) => s.priority === "critical");
+  const local = emergencyServices.filter((s) => s.priority === "local");
+  const utility = emergencyServices.filter((s) => s.priority === "utility");
+  const support = emergencyServices.filter((s) => s.priority === "support");
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">🚨 Emergency Services</h1>
-        <p className="text-gray-600">Quick access to emergency contacts - tap to call</p>
-      </div>
-
-      {/* Critical Emergency Banner */}
-      <div className="bg-red-600 text-white rounded-xl p-6 mb-8">
-        <h2 className="text-2xl font-bold mb-2">⚠️ Life-Threatening Emergency?</h2>
-        <p className="mb-4">For immediate life-threatening emergencies, call:</p>
-        <div className="flex flex-wrap gap-4">
-          <button
-            onClick={() => handleCall("10111")}
-            className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold text-xl hover:bg-red-50 transition-colors"
-          >
-            🚔 Police: 10111
-          </button>
-          <button
-            onClick={() => handleCall("10177")}
-            className="bg-white text-red-600 px-8 py-4 rounded-xl font-bold text-xl hover:bg-red-50 transition-colors"
-          >
-            🚑 Ambulance: 10177
-          </button>
+    <div className="min-h-screen">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold gradient-text">🚨 Emergency Services</h1>
+          <p className="text-[var(--ocean-deep)]/60 mt-1">
+            Tap any number to call directly
+          </p>
         </div>
-      </div>
 
-      {/* All Services Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {emergencyServices.map((service) => (
-          <button
-            key={service.id}
-            onClick={() => handleCall(service.number)}
-            className="bg-white rounded-xl shadow-md p-6 text-left hover:shadow-lg hover:scale-102 transition-all duration-200 border-2 border-transparent hover:border-red-200"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <span className="text-4xl">{service.icon}</span>
-              <div>
-                <h3 className="font-semibold text-lg">{service.name}</h3>
-                <p className="text-2xl font-bold text-red-600">{service.number}</p>
-              </div>
-            </div>
-            <p className="text-gray-600 text-sm">{service.description}</p>
-            <p className="text-gray-500 text-sm mt-2">🕐 {service.available}</p>
-          </button>
-        ))}
-      </div>
+        {/* Critical Emergency Banner */}
+        <div 
+          className="rounded-2xl p-6 mb-8 text-white"
+          style={{ background: "linear-gradient(135deg, var(--hut-red) 0%, #c1121f 100%)" }}
+        >
+          <h2 className="text-xl font-bold mb-2">⚠️ Life-Threatening Emergency?</h2>
+          <p className="text-white/80 mb-4">Call immediately:</p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => handleCall("10111")}
+              className="bg-white text-[var(--hut-red)] px-6 py-3 rounded-xl font-bold text-lg hover:bg-red-50 transition-colors"
+            >
+              🚔 Police: 10111
+            </button>
+            <button
+              onClick={() => handleCall("10177")}
+              className="bg-white text-[var(--hut-red)] px-6 py-3 rounded-xl font-bold text-lg hover:bg-red-50 transition-colors"
+            >
+              🚑 Ambulance: 10177
+            </button>
+          </div>
+        </div>
 
-      {/* Safety Tips */}
-      <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-xl p-6">
-        <h2 className="text-xl font-bold mb-4">💡 Emergency Tips</h2>
-        <ul className="space-y-2 text-gray-700">
-          <li>• Stay calm and speak clearly when calling emergency services</li>
-          <li>• Know your exact address or location</li>
-          <li>• Don&apos;t hang up until the operator tells you to</li>
-          <li>• Keep this page bookmarked for quick access</li>
-          <li>• Save important numbers in your phone contacts</li>
-        </ul>
+        {/* Local Muizenberg Services */}
+        <section className="mb-8">
+          <h2 className="text-lg font-semibold text-[var(--ocean-deep)] mb-4 flex items-center gap-2">
+            <span>🏖️</span> Local Muizenberg
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {local.map((service) => (
+              <button
+                key={service.id}
+                onClick={() => handleCall(service.number)}
+                className={`p-4 rounded-xl border-2 transition-all text-left ${priorityStyles.local}`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{service.icon}</span>
+                  <div>
+                    <p className="font-semibold text-[var(--ocean-deep)]">{service.name}</p>
+                    <p className="text-xl font-bold text-[var(--hut-blue)]">{service.number}</p>
+                    <p className="text-xs text-[var(--ocean-deep)]/60">{service.description}</p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Utilities */}
+        <section className="mb-8">
+          <h2 className="text-lg font-semibold text-[var(--ocean-deep)] mb-4 flex items-center gap-2">
+            <span>🔧</span> Utilities
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {utility.map((service) => (
+              <button
+                key={service.id}
+                onClick={() => handleCall(service.number)}
+                className={`p-4 rounded-xl border-2 transition-all text-left ${priorityStyles.utility}`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{service.icon}</span>
+                  <div>
+                    <p className="font-semibold text-[var(--ocean-deep)]">{service.name}</p>
+                    <p className="text-xl font-bold text-[#B8860B]">{service.number}</p>
+                    <p className="text-xs text-[var(--ocean-deep)]/60">{service.description}</p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Support Lines */}
+        <section className="mb-8">
+          <h2 className="text-lg font-semibold text-[var(--ocean-deep)] mb-4 flex items-center gap-2">
+            <span>💚</span> Support Lines (24/7)
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {support.map((service) => (
+              <button
+                key={service.id}
+                onClick={() => handleCall(service.number)}
+                className={`p-4 rounded-xl border-2 transition-all text-left ${priorityStyles.support}`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">{service.icon}</span>
+                  <div>
+                    <p className="font-semibold text-[var(--ocean-deep)]">{service.name}</p>
+                    <p className="text-xl font-bold text-[var(--hut-green)]">{service.number}</p>
+                    <p className="text-xs text-[var(--ocean-deep)]/60">{service.description}</p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Safety Tips */}
+        <div className="card p-6 bg-[var(--sand)]/50">
+          <h3 className="font-semibold text-[var(--ocean-deep)] mb-3">
+            💡 Muizenberg Safety Tips
+          </h3>
+          <ul className="text-sm text-[var(--ocean-deep)]/70 space-y-2">
+            <li>🦈 Check Shark Spotter flags before swimming (White = safe, Red = shark spotted)</li>
+            <li>🌊 Swim between the flags at lifeguard-patrolled areas</li>
+            <li>🚗 Don&apos;t leave valuables visible in parked cars</li>
+            <li>📱 Save these numbers in your phone for quick access</li>
+            <li>👥 Report suspicious activity to Neighbourhood Watch</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

@@ -12,155 +12,222 @@ interface Item {
   posted: string;
   seller: string;
   description: string;
+  emoji: string;
 }
 
-const categories = ["All", "Electronics", "Furniture", "Vehicles", "Clothing", "Home & Garden", "Other"];
+const categories = [
+  { value: "All", icon: "🛒" },
+  { value: "Surf Gear", icon: "🏄" },
+  { value: "Furniture", icon: "🪑" },
+  { value: "Electronics", icon: "📱" },
+  { value: "Bikes & Transport", icon: "🚲" },
+  { value: "Home & Garden", icon: "🌱" },
+  { value: "Other", icon: "📦" },
+];
 
 const sampleItems: Item[] = [
   {
     id: 1,
-    title: "Samsung 55\" Smart TV",
-    price: "R4,500",
-    category: "Electronics",
+    title: "7'2 Mini Mal Surfboard",
+    price: "R2,500",
+    category: "Surf Gear",
     condition: "Good",
-    location: "Suburb A",
-    posted: "2 hours ago",
-    seller: "John D.",
-    description: "Works perfectly, upgrading to bigger size. Remote included.",
+    location: "Muizenberg",
+    posted: "3 hours ago",
+    seller: "Mike S.",
+    description: "Great beginner board. Few dings but rides well. Includes fins.",
+    emoji: "🏄",
   },
   {
     id: 2,
-    title: "3-Seater Leather Couch",
-    price: "R2,800",
-    category: "Furniture",
-    condition: "Fair",
-    location: "Suburb B",
+    title: "Beach Cruiser Bicycle",
+    price: "R1,800",
+    category: "Bikes & Transport",
+    condition: "Excellent",
+    location: "Muizenberg",
     posted: "1 day ago",
-    seller: "Mary S.",
-    description: "Genuine leather, some wear but still comfortable.",
+    seller: "Sarah L.",
+    description: "Perfect for riding along the beachfront. Recently serviced.",
+    emoji: "🚲",
   },
   {
     id: 3,
-    title: "Garden Tools Set",
-    price: "R350",
-    category: "Home & Garden",
+    title: "Vintage Rattan Chair",
+    price: "R650",
+    category: "Furniture",
     condition: "Good",
-    location: "Suburb A",
+    location: "Muizenberg",
     posted: "2 days ago",
-    seller: "Peter K.",
-    description: "Spade, rake, fork, and trowel. Barely used.",
+    seller: "Emma K.",
+    description: "Beautiful bohemian piece. Great for a balcony or sunroom.",
+    emoji: "🪑",
   },
   {
     id: 4,
-    title: "Kids Bicycle",
-    price: "R600",
-    category: "Other",
+    title: "Wetsuit 3/2mm (Medium)",
+    price: "R800",
+    category: "Surf Gear",
+    condition: "Fair",
+    location: "Muizenberg",
+    posted: "4 days ago",
+    seller: "Tom R.",
+    description: "O'Neill wetsuit, good for summer. Some wear but no holes.",
+    emoji: "🤿",
+  },
+  {
+    id: 5,
+    title: "Succulent Collection",
+    price: "R150",
+    category: "Home & Garden",
     condition: "Excellent",
-    location: "Suburb C",
-    posted: "3 days ago",
+    location: "Muizenberg",
+    posted: "5 days ago",
     seller: "Lisa M.",
-    description: "Suitable for ages 5-8. Training wheels included.",
+    description: "6 potted succulents. Perfect for sunny Muiz gardens!",
+    emoji: "🌵",
   },
 ];
+
+const conditionColors: Record<string, string> = {
+  Excellent: "tag-green",
+  Good: "tag-blue",
+  Fair: "tag-yellow",
+  "For Parts": "tag-red",
+};
 
 export default function MarketplacePage() {
   const [items] = useState<Item[]>(sampleItems);
   const [filter, setFilter] = useState("All");
   const [showForm, setShowForm] = useState(false);
 
-  const filtered = filter === "All" 
-    ? items 
-    : items.filter(i => i.category === filter);
+  const filtered = filter === "All"
+    ? items
+    : items.filter((i) => i.category === filter);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">🛒 Marketplace</h1>
-          <p className="text-gray-600">Buy and sell in your community</p>
-        </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors font-medium"
-        >
-          + Sell Item
-        </button>
-      </div>
-
-      {showForm && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold mb-4">List an Item for Sale</h2>
-          <form className="grid md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Item Title" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none" />
-            <input type="text" placeholder="Price (e.g., R500)" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none" />
-            <select className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none">
-              {categories.slice(1).map(cat => (
-                <option key={cat}>{cat}</option>
-              ))}
-            </select>
-            <select className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none">
-              <option>Excellent</option>
-              <option>Good</option>
-              <option>Fair</option>
-              <option>For Parts</option>
-            </select>
-            <input type="text" placeholder="Your Location" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none" />
-            <input type="text" placeholder="Contact Number" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none" />
-            <textarea placeholder="Description" className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-orange-500 outline-none md:col-span-2" rows={3} />
-            <button type="submit" className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors md:col-span-2">
-              Post Item
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setFilter(cat)}
-            className={`px-4 py-2 rounded-full transition-colors ${
-              filter === cat
-                ? "bg-orange-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.map((item) => (
-          <div key={item.id} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-            <div className="bg-gray-200 h-48 flex items-center justify-center text-6xl">
-              📦
-            </div>
-            <div className="p-4">
-              <div className="flex justify-between items-start">
-                <h2 className="text-lg font-semibold">{item.title}</h2>
-                <span className="text-xl font-bold text-orange-600">{item.price}</span>
-              </div>
-              <div className="mt-2 flex gap-2">
-                <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs">
-                  {item.category}
-                </span>
-                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">
-                  {item.condition}
-                </span>
-              </div>
-              <p className="mt-2 text-gray-600 text-sm line-clamp-2">{item.description}</p>
-              <div className="mt-3 text-sm text-gray-500">
-                <p>📍 {item.location} • 🕐 {item.posted}</p>
-                <p>👤 {item.seller}</p>
-              </div>
-              <button className="mt-3 w-full bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors">
-                Contact Seller
-              </button>
-            </div>
+    <div className="min-h-screen">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold gradient-text">🛒 Marketplace</h1>
+            <p className="text-[var(--ocean-deep)]/60 mt-1">
+              Buy & sell with your Muizenberg neighbours
+            </p>
           </div>
-        ))}
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="btn-primary"
+          >
+            + Sell Something
+          </button>
+        </div>
+
+        {/* Sell Form */}
+        {showForm && (
+          <div className="card p-6 mb-8">
+            <h2 className="text-xl font-semibold text-[var(--ocean-deep)] mb-4">
+              List an Item
+            </h2>
+            <form className="grid md:grid-cols-2 gap-4">
+              <input type="text" placeholder="What are you selling?" />
+              <input type="text" placeholder="Price (e.g., R500)" />
+              <select>
+                {categories.slice(1).map((cat) => (
+                  <option key={cat.value}>{cat.icon} {cat.value}</option>
+                ))}
+              </select>
+              <select>
+                <option>Excellent</option>
+                <option>Good</option>
+                <option>Fair</option>
+                <option>For Parts</option>
+              </select>
+              <input type="text" placeholder="Your Name" />
+              <input type="text" placeholder="Contact (WhatsApp/Phone)" />
+              <textarea
+                placeholder="Describe your item..."
+                className="md:col-span-2"
+                rows={3}
+              />
+              <button type="submit" className="btn-primary md:col-span-2">
+                Post Item
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {categories.map((cat) => (
+            <button
+              key={cat.value}
+              onClick={() => setFilter(cat.value)}
+              className={`px-4 py-2 rounded-xl font-medium transition-all ${
+                filter === cat.value
+                  ? "bg-[var(--hut-yellow)] text-[var(--ocean-deep)] shadow-md"
+                  : "bg-white text-[var(--ocean-deep)] hover:bg-[var(--sand)] border border-[var(--sand-dark)]"
+              }`}
+            >
+              <span className="mr-1">{cat.icon}</span>
+              {cat.value}
+            </button>
+          ))}
+        </div>
+
+        {/* Items Grid */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filtered.map((item) => (
+            <div key={item.id} className="card overflow-hidden">
+              {/* Image placeholder with emoji */}
+              <div className="h-40 bg-gradient-to-br from-[var(--sand)] to-[var(--sand-dark)] flex items-center justify-center">
+                <span className="text-6xl">{item.emoji}</span>
+              </div>
+
+              <div className="p-5">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-semibold text-[var(--ocean-deep)] leading-tight">
+                    {item.title}
+                  </h3>
+                  <span className="text-lg font-bold text-[var(--hut-blue)] whitespace-nowrap ml-2">
+                    {item.price}
+                  </span>
+                </div>
+
+                <div className="flex gap-2 mb-3">
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${conditionColors[item.condition]}`}>
+                    {item.condition}
+                  </span>
+                </div>
+
+                <p className="text-sm text-[var(--ocean-deep)]/70 mb-3 line-clamp-2">
+                  {item.description}
+                </p>
+
+                <div className="text-xs text-[var(--ocean-deep)]/50 mb-4">
+                  <p>👤 {item.seller} • 🕐 {item.posted}</p>
+                </div>
+
+                <button className="btn-primary w-full text-sm py-2">
+                  Message Seller
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tips */}
+        <div className="mt-12 card p-6 bg-[var(--sand)]/30">
+          <h3 className="font-semibold text-[var(--ocean-deep)] mb-2">
+            💡 Marketplace Tips
+          </h3>
+          <ul className="text-sm text-[var(--ocean-deep)]/70 space-y-1">
+            <li>• Meet in public places for exchanges</li>
+            <li>• Cash is king in Muiz 💵</li>
+            <li>• Check items before paying</li>
+            <li>• Be a good neighbour — fair prices, honest descriptions</li>
+          </ul>
+        </div>
       </div>
     </div>
   );
