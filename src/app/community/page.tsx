@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useAuth } from "@/components/AuthContext";
 
 interface Post {
-  id: number;
+  id: string;
   type: "event" | "announcement" | "discussion" | "alert";
   title: string;
   content: string;
   author: string;
-  posted: string;
   likes: number;
   comments: number;
+  created_at: string;
 }
 
 const postTypes = [
@@ -21,69 +23,6 @@ const postTypes = [
   { value: "alert", label: "Alerts", icon: "⚠️" },
 ];
 
-const samplePosts: Post[] = [
-  {
-    id: 1,
-    type: "event",
-    title: "Beach Cleanup Saturday 8am 🏖️",
-    content: "Join us at Surfer's Corner this Saturday for our monthly beach cleanup! Bags and gloves provided. Let's keep Muizenberg beautiful. Coffee afterwards at Café Roux for all volunteers.",
-    author: "Muizenberg Beach Keepers",
-    posted: "2 hours ago",
-    likes: 34,
-    comments: 8,
-  },
-  {
-    id: 2,
-    type: "alert",
-    title: "Shark Spotted - Red Flag 🦈",
-    content: "Shark spotted off Surfer's Corner at 2pm today. Beach currently has RED flag. Please stay out of the water until the all-clear. White flag will indicate it's safe to swim again.",
-    author: "Shark Spotters",
-    posted: "4 hours ago",
-    likes: 67,
-    comments: 12,
-  },
-  {
-    id: 3,
-    type: "announcement",
-    title: "New Surf School Opening",
-    content: "Excited to announce that 'Stoked Surf Academy' is opening next month at Surfer's Corner! Lessons for all ages and levels. Grand opening special - first lesson 50% off. See you in the water! 🤙",
-    author: "Stoked Surf Academy",
-    posted: "1 day ago",
-    likes: 89,
-    comments: 23,
-  },
-  {
-    id: 4,
-    type: "discussion",
-    title: "Best sunset spot in Muiz?",
-    content: "Moving to Muizenberg next week! Where's everyone's favourite spot to watch the sunset? Looking for that perfect end-of-day chill spot. Thanks in advance! 🌅",
-    author: "Sarah K.",
-    posted: "1 day ago",
-    likes: 12,
-    comments: 19,
-  },
-  {
-    id: 5,
-    type: "event",
-    title: "Full Moon Drum Circle - Friday",
-    content: "Monthly drum circle at the beach this Friday from 6pm. Bring your drums, djembes, or just come to vibe. Fire will be going. Everyone welcome. Let's make some magic! 🥁🌕",
-    author: "Muizenberg Drummers",
-    posted: "2 days ago",
-    likes: 56,
-    comments: 7,
-  },
-  {
-    id: 6,
-    type: "discussion",
-    title: "Anyone lost a tabby cat?",
-    content: "Found a friendly tabby cat near Palmer Road. Orange and white, no collar. Very affectionate, seems well cared for. Currently keeping him safe in my garden. Please share!",
-    author: "Tom R.",
-    posted: "3 days ago",
-    likes: 28,
-    comments: 14,
-  },
-];
-
 const typeStyles: Record<string, { bg: string; icon: string }> = {
   event: { bg: "tag-green", icon: "📅" },
   announcement: { bg: "tag-blue", icon: "📢" },
@@ -92,13 +31,59 @@ const typeStyles: Record<string, { bg: string; icon: string }> = {
 };
 
 export default function CommunityPage() {
-  const [posts] = useState<Post[]>(samplePosts);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [filter, setFilter] = useState("all");
   const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({ type: "discussion", title: "", content: "", author: "" });
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const fetchPosts = async () => {
+    const res = await fetch("/api/posts");
+    const data = await res.json();
+    setPosts(data);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    const res = await fetch("/api/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    
+    if (res.ok) {
+      setShowForm(false);
+      setFormData({ type: "discussion", title: "", content: "", author: "" });
+      fetchPosts();
+    } else {
+      const data = await res.json();
+      alert(data.error || "Failed to create post");
+    }
+    setLoading(false);
+  };
 
   const filtered = filter === "all"
     ? posts
     : posts.filter((p) => p.type === filter);
+
+  const formatTime = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    if (hours < 1) return "Just now";
+    if (hours < 24) return `${hours} hours ago`;
+    const days = Math.floor(hours / 24);
+    if (days === 1) return "Yesterday";
+    return `${days} days ago`;
+  };
 
   return (
     <div className="min-h-screen">
@@ -111,38 +96,68 @@ export default function CommunityPage() {
               What&apos;s happening in Muizenberg
             </p>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="btn-primary"
-          >
-            + New Post
-          </button>
+          {user ? (
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="btn-primary"
+            >
+              + New Post
+            </button>
+          ) : (
+            <Link href="/signup" className="btn-primary">
+              Sign up to post
+            </Link>
+          )}
         </div>
 
         {/* Post Form */}
-        {showForm && (
+        {showForm && user && (
           <div className="card p-6 mb-8">
             <h2 className="text-xl font-semibold text-ocean-deep mb-4">
               Share with the Community
             </h2>
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid sm:grid-cols-2 gap-4">
-                <select>
+                <select
+                  value={formData.type}
+                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  required
+                >
                   <option value="discussion">💬 Discussion</option>
                   <option value="event">📅 Event</option>
                   <option value="announcement">📢 Announcement</option>
                   <option value="alert">⚠️ Alert</option>
                 </select>
-                <input type="text" placeholder="Your Name" />
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  value={formData.author}
+                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                  required
+                />
               </div>
-              <input type="text" placeholder="Title" />
+              <input
+                type="text"
+                placeholder="Title"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                required
+              />
               <textarea
                 placeholder="What's on your mind, Muizenberg?"
                 rows={4}
+                value={formData.content}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                required
               />
-              <button type="submit" className="btn-primary">
-                Post
-              </button>
+              <div className="flex gap-2">
+                <button type="submit" disabled={loading} className="btn-primary">
+                  {loading ? "Posting..." : "Post"}
+                </button>
+                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         )}
@@ -168,14 +183,14 @@ export default function CommunityPage() {
         {/* Posts Feed */}
         <div className="space-y-4">
           {filtered.map((post) => {
-            const style = typeStyles[post.type];
+            const style = typeStyles[post.type] || typeStyles.discussion;
             return (
               <div key={post.id} className="card p-6">
                 <div className="flex items-start justify-between mb-3">
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${style.bg}`}>
                     {style.icon} {post.type.charAt(0).toUpperCase() + post.type.slice(1)}
                   </span>
-                  <span className="text-sm text-gray-500">{post.posted}</span>
+                  <span className="text-sm text-gray-500">{formatTime(post.created_at)}</span>
                 </div>
 
                 <h2 className="text-xl font-semibold text-ocean-deep mb-2">
@@ -202,6 +217,12 @@ export default function CommunityPage() {
             );
           })}
         </div>
+
+        {filtered.length === 0 && (
+          <div className="card p-8 text-center text-gray-500">
+            No posts yet. Be the first to share something!
+          </div>
+        )}
 
         {/* Subscribe Banner */}
         <div className="mt-8 rounded-2xl p-8 text-center text-white bg-gradient-to-r from-slate-800 to-slate-700">

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useAuth } from "@/components/AuthContext";
 
 interface Business {
-  id: number;
+  id: string;
   name: string;
   category: string;
   address: string;
@@ -23,169 +25,6 @@ const categories = [
   { value: "Services", icon: "🔧" },
 ];
 
-// Real Muizenberg businesses
-const realBusinesses: Business[] = [
-  // Food & Coffee
-  {
-    id: 1,
-    name: "Empire Cafe",
-    category: "Food & Coffee",
-    address: "11 York Road, Muizenberg",
-    phone: "021-788-1250",
-    hours: "7am - 4pm daily",
-    description: "Beloved local cafe serving excellent breakfasts in a tastefully decorated space. A Muizenberg institution.",
-    rating: 4.5,
-    reviews: 812,
-  },
-  {
-    id: 2,
-    name: "The Hans and Lloyd Coffee Co",
-    category: "Food & Coffee",
-    address: "13 York Road, Muizenberg",
-    phone: "021-788-8990",
-    hours: "7am - 3pm daily",
-    description: "The coffee, the food and the atmosphere is stunning. Great spot for specialty coffee lovers.",
-    rating: 4.4,
-    reviews: 807,
-  },
-  {
-    id: 3,
-    name: "Tiger's Milk Muizenberg",
-    category: "Food & Coffee",
-    address: "Beach Road, Muizenberg",
-    phone: "021-788-1860",
-    hours: "11am - late",
-    description: "The original Tiger's Milk. Burgers, cocktails, and celebrating the beautiful spot that is Muizenberg.",
-    rating: 4.3,
-    reviews: 1200,
-  },
-  {
-    id: 4,
-    name: "Tortuga Loca",
-    category: "Food & Coffee",
-    address: "141 Main Road, Muizenberg",
-    phone: "021-788-3672",
-    hours: "12pm - 10pm",
-    description: "A gem of a venue with warm greetings, great service, and delicious food. Mexican-inspired cuisine.",
-    rating: 4.6,
-    reviews: 803,
-  },
-  {
-    id: 5,
-    name: "Joon Restaurant",
-    category: "Food & Coffee",
-    address: "Muizenberg Village",
-    phone: "021-788-5656",
-    hours: "8am - 9pm",
-    description: "The friendliest place to enjoy rejuvenating breakfasts, barista coffee, home-baked treats, and some of the best pizzas in Cape Town.",
-    rating: 4.5,
-    reviews: 450,
-  },
-  {
-    id: 6,
-    name: "Gaslight Cafe",
-    category: "Food & Coffee",
-    address: "Main Road, Muizenberg",
-    phone: "021-788-5470",
-    hours: "8am - 4pm",
-    description: "Cozy cafe with great coffee and light meals. Perfect for a relaxed breakfast or lunch.",
-    rating: 4.1,
-    reviews: 44,
-  },
-  {
-    id: 7,
-    name: "Hang Ten Café",
-    category: "Food & Coffee",
-    address: "Beach Road, Muizenberg",
-    phone: "021-788-8822",
-    hours: "7am - 5pm",
-    description: "Beachfront cafe perfect for post-surf refueling. Great views and casual vibes.",
-    rating: 4.4,
-    reviews: 37,
-  },
-  // Surf & Beach
-  {
-    id: 8,
-    name: "Surf Emporium",
-    category: "Surf & Beach",
-    address: "72 Beach Road, Surfer's Corner",
-    phone: "021-788-8687",
-    hours: "8am - 6pm daily",
-    description: "South Africa's most popular surf destination with accredited surf & SUP lessons, quality equipment, and leading brands. 20+ years experience.",
-    rating: 4.7,
-    reviews: 271,
-  },
-  {
-    id: 9,
-    name: "Gary's Surf School",
-    category: "Surf & Beach",
-    address: "34 Beach Road, Balmoral Building",
-    phone: "021-788-9839",
-    hours: "8am - 5pm daily",
-    description: "The first surf school in Cape Town! 35+ years teaching beginners to intermediate. Great instructors and excellent value.",
-    rating: 4.7,
-    reviews: 117,
-  },
-  {
-    id: 10,
-    name: "Surfshack Surf School",
-    category: "Surf & Beach",
-    address: "Beach Road, Muizenberg",
-    phone: "021-788-8110",
-    hours: "8am - 6pm daily",
-    description: "Expert coaches, perfect beginner waves, and 20+ years of stoke. Private and group lessons available.",
-    rating: 4.6,
-    reviews: 200,
-  },
-  {
-    id: 11,
-    name: "African Soul Surfer",
-    category: "Surf & Beach",
-    address: "Beach Road, Muizenberg",
-    phone: "082-456-7890",
-    hours: "Sunrise - Sunset",
-    description: "Surf & Yoga centre on the beach. Offering surf lessons, seaview rooms, yoga, healthy food cafe & spectacular views.",
-    rating: 4.8,
-    reviews: 85,
-  },
-  // Wellness
-  {
-    id: 12,
-    name: "Muizenberg Yoga",
-    category: "Wellness",
-    address: "York Road, Muizenberg",
-    phone: "072-123-4567",
-    hours: "Various classes",
-    description: "Beach yoga, studio sessions, and retreats. Find your flow in our beautiful oceanside space.",
-    rating: 4.6,
-    reviews: 62,
-  },
-  // Services
-  {
-    id: 13,
-    name: "Sunrise Circle Pharmacy",
-    category: "Services",
-    address: "Sunrise Circle, Muizenberg",
-    phone: "021-788-2345",
-    hours: "8am - 7pm Mon-Sat, 9am-1pm Sun",
-    description: "Your trusted local pharmacy. Prescriptions, health advice, and friendly service.",
-    rating: 4.2,
-    reviews: 45,
-  },
-  // Retail
-  {
-    id: 14,
-    name: "Lifestyle Surf Shop",
-    category: "Retail",
-    address: "Beach Road, Muizenberg",
-    phone: "021-788-5566",
-    hours: "9am - 5pm daily",
-    description: "Quality surfboards, wetsuits, and beach gear. Supporting the local surf community for years.",
-    rating: 4.4,
-    reviews: 89,
-  },
-];
-
 const categoryColors: Record<string, string> = {
   "Food & Coffee": "tag-yellow",
   "Surf & Beach": "tag-blue",
@@ -195,9 +34,45 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function BusinessesPage() {
-  const [businesses] = useState<Business[]>(realBusinesses);
+  const [businesses, setBusinesses] = useState<Business[]>([]);
   const [filter, setFilter] = useState("All");
   const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "", category: "Food & Coffee", address: "", phone: "", hours: "", description: ""
+  });
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    fetchBusinesses();
+  }, []);
+
+  const fetchBusinesses = async () => {
+    const res = await fetch("/api/businesses");
+    const data = await res.json();
+    setBusinesses(data);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    const res = await fetch("/api/businesses", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    
+    if (res.ok) {
+      setShowForm(false);
+      setFormData({ name: "", category: "Food & Coffee", address: "", phone: "", hours: "", description: "" });
+      fetchBusinesses();
+    } else {
+      const data = await res.json();
+      alert(data.error || "Failed to add business");
+    }
+    setLoading(false);
+  };
 
   const filtered = filter === "All"
     ? businesses
@@ -214,39 +89,81 @@ export default function BusinessesPage() {
               Real Muizenberg businesses — support local!
             </p>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="btn-primary"
-          >
-            + Add Your Business
-          </button>
+          {user ? (
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="btn-primary"
+            >
+              + Add Your Business
+            </button>
+          ) : (
+            <Link href="/signup" className="btn-primary">
+              Sign up to add
+            </Link>
+          )}
         </div>
 
         {/* Add Business Form */}
-        {showForm && (
+        {showForm && user && (
           <div className="card p-6 mb-8">
             <h2 className="text-xl font-semibold text-ocean-deep mb-4">
               List Your Business
             </h2>
-            <form className="grid md:grid-cols-2 gap-4">
-              <input type="text" placeholder="Business Name" />
-              <select>
+            <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                placeholder="Business Name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
+              />
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                required
+              >
                 {categories.slice(1).map((cat) => (
-                  <option key={cat.value}>{cat.icon} {cat.value}</option>
+                  <option key={cat.value} value={cat.value}>{cat.icon} {cat.value}</option>
                 ))}
               </select>
-              <input type="text" placeholder="Address" />
-              <input type="text" placeholder="Phone Number" />
-              <input type="text" placeholder="Business Hours" />
+              <input
+                type="text"
+                placeholder="Address"
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Phone Number"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Business Hours"
+                value={formData.hours}
+                onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
+                required
+              />
               <input type="text" placeholder="Website (optional)" />
               <textarea
                 placeholder="Tell the community about your business..."
                 className="md:col-span-2"
                 rows={3}
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                required
               />
-              <button type="submit" className="btn-primary md:col-span-2">
-                Submit Listing
-              </button>
+              <div className="md:col-span-2 flex gap-2">
+                <button type="submit" disabled={loading} className="btn-primary">
+                  {loading ? "Submitting..." : "Submit Listing"}
+                </button>
+                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         )}
@@ -331,6 +248,12 @@ export default function BusinessesPage() {
           ))}
         </div>
 
+        {filtered.length === 0 && (
+          <div className="card p-8 text-center text-gray-500">
+            No businesses found in this category.
+          </div>
+        )}
+
         {/* CTA */}
         <div className="mt-12 text-center card p-8 bg-amber-50/50">
           <h3 className="text-xl font-semibold text-ocean-deep mb-2">
@@ -339,9 +262,15 @@ export default function BusinessesPage() {
           <p className="text-gray-600 mb-4">
             Get discovered by your neighbours. Free listing for Muizenberg businesses.
           </p>
-          <button onClick={() => setShowForm(true)} className="btn-primary">
-            Add Your Business
-          </button>
+          {user ? (
+            <button onClick={() => setShowForm(true)} className="btn-primary">
+              Add Your Business
+            </button>
+          ) : (
+            <Link href="/signup" className="btn-primary">
+              Sign up to add your business
+            </Link>
+          )}
         </div>
       </div>
     </div>

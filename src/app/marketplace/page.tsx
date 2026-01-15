@@ -1,18 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useAuth } from "@/components/AuthContext";
 
 interface Item {
-  id: number;
+  id: string;
   title: string;
   price: string;
   category: string;
   condition: string;
   location: string;
-  posted: string;
-  seller: string;
   description: string;
+  seller: string;
+  contact: string;
   emoji: string;
+  created_at: string;
 }
 
 const categories = [
@@ -25,69 +28,6 @@ const categories = [
   { value: "Other", icon: "📦" },
 ];
 
-const sampleItems: Item[] = [
-  {
-    id: 1,
-    title: "7'2 Mini Mal Surfboard",
-    price: "R2,500",
-    category: "Surf Gear",
-    condition: "Good",
-    location: "Muizenberg",
-    posted: "3 hours ago",
-    seller: "Mike S.",
-    description: "Great beginner board. Few dings but rides well. Includes fins.",
-    emoji: "🏄",
-  },
-  {
-    id: 2,
-    title: "Beach Cruiser Bicycle",
-    price: "R1,800",
-    category: "Bikes & Transport",
-    condition: "Excellent",
-    location: "Muizenberg",
-    posted: "1 day ago",
-    seller: "Sarah L.",
-    description: "Perfect for riding along the beachfront. Recently serviced.",
-    emoji: "🚲",
-  },
-  {
-    id: 3,
-    title: "Vintage Rattan Chair",
-    price: "R650",
-    category: "Furniture",
-    condition: "Good",
-    location: "Muizenberg",
-    posted: "2 days ago",
-    seller: "Emma K.",
-    description: "Beautiful bohemian piece. Great for a balcony or sunroom.",
-    emoji: "🪑",
-  },
-  {
-    id: 4,
-    title: "Wetsuit 3/2mm (Medium)",
-    price: "R800",
-    category: "Surf Gear",
-    condition: "Fair",
-    location: "Muizenberg",
-    posted: "4 days ago",
-    seller: "Tom R.",
-    description: "O'Neill wetsuit, good for summer. Some wear but no holes.",
-    emoji: "🤿",
-  },
-  {
-    id: 5,
-    title: "Succulent Collection",
-    price: "R150",
-    category: "Home & Garden",
-    condition: "Excellent",
-    location: "Muizenberg",
-    posted: "5 days ago",
-    seller: "Lisa M.",
-    description: "6 potted succulents. Perfect for sunny Muiz gardens!",
-    emoji: "🌵",
-  },
-];
-
 const conditionColors: Record<string, string> = {
   Excellent: "tag-green",
   Good: "tag-blue",
@@ -96,9 +36,61 @@ const conditionColors: Record<string, string> = {
 };
 
 export default function MarketplacePage() {
-  const [items] = useState<Item[]>(sampleItems);
+  const [items, setItems] = useState<Item[]>([]);
   const [filter, setFilter] = useState("All");
   const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "", price: "", category: "Surf Gear", condition: "Good",
+    location: "Muizenberg", description: "", seller: "", contact: "", emoji: "📦"
+  });
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const fetchItems = async () => {
+    const res = await fetch("/api/marketplace");
+    const data = await res.json();
+    setItems(data);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    const res = await fetch("/api/marketplace", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    
+    if (res.ok) {
+      setShowForm(false);
+      setFormData({
+        title: "", price: "", category: "Surf Gear", condition: "Good",
+        location: "Muizenberg", description: "", seller: "", contact: "", emoji: "📦"
+      });
+      fetchItems();
+    } else {
+      const data = await res.json();
+      alert(data.error || "Failed to list item");
+    }
+    setLoading(false);
+  };
+
+  const formatTime = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    if (hours < 1) return "Just now";
+    if (hours < 24) return `${hours} hours ago`;
+    const days = Math.floor(hours / 24);
+    if (days === 1) return "Yesterday";
+    return `${days} days ago`;
+  };
 
   const filtered = filter === "All"
     ? items
@@ -115,44 +107,90 @@ export default function MarketplacePage() {
               Buy & sell with your Muizenberg neighbours
             </p>
           </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="btn-primary"
-          >
-            + Sell Something
-          </button>
+          {user ? (
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="btn-primary"
+            >
+              + Sell Something
+            </button>
+          ) : (
+            <Link href="/signup" className="btn-primary">
+              Sign up to sell
+            </Link>
+          )}
         </div>
 
         {/* Sell Form */}
-        {showForm && (
+        {showForm && user && (
           <div className="card p-6 mb-8">
             <h2 className="text-xl font-semibold text-ocean-deep mb-4">
               List an Item
             </h2>
-            <form className="grid md:grid-cols-2 gap-4">
-              <input type="text" placeholder="What are you selling?" />
-              <input type="text" placeholder="Price (e.g., R500)" />
-              <select>
+            <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                placeholder="What are you selling?"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Price (e.g., R500)"
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                required
+              />
+              <select
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                required
+              >
                 {categories.slice(1).map((cat) => (
-                  <option key={cat.value}>{cat.icon} {cat.value}</option>
+                  <option key={cat.value} value={cat.value}>{cat.icon} {cat.value}</option>
                 ))}
               </select>
-              <select>
+              <select
+                value={formData.condition}
+                onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
+                required
+              >
                 <option>Excellent</option>
                 <option>Good</option>
                 <option>Fair</option>
                 <option>For Parts</option>
               </select>
-              <input type="text" placeholder="Your Name" />
-              <input type="text" placeholder="Contact (WhatsApp/Phone)" />
+              <input
+                type="text"
+                placeholder="Your Name"
+                value={formData.seller}
+                onChange={(e) => setFormData({ ...formData, seller: e.target.value })}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Contact (WhatsApp/Phone)"
+                value={formData.contact}
+                onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                required
+              />
               <textarea
                 placeholder="Describe your item..."
                 className="md:col-span-2"
                 rows={3}
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                required
               />
-              <button type="submit" className="btn-primary md:col-span-2">
-                Post Item
-              </button>
+              <div className="md:col-span-2 flex gap-2">
+                <button type="submit" disabled={loading} className="btn-primary">
+                  {loading ? "Posting..." : "Post Item"}
+                </button>
+                <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         )}
@@ -181,7 +219,7 @@ export default function MarketplacePage() {
             <div key={item.id} className="card overflow-hidden">
               {/* Image placeholder with emoji */}
               <div className="h-40 bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center">
-                <span className="text-6xl">{item.emoji}</span>
+                <span className="text-6xl">{item.emoji || "📦"}</span>
               </div>
 
               <div className="p-5">
@@ -195,7 +233,7 @@ export default function MarketplacePage() {
                 </div>
 
                 <div className="flex gap-2 mb-3">
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${conditionColors[item.condition]}`}>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${conditionColors[item.condition] || "tag-blue"}`}>
                     {item.condition}
                   </span>
                 </div>
@@ -205,16 +243,22 @@ export default function MarketplacePage() {
                 </p>
 
                 <div className="text-xs text-gray-500 mb-4">
-                  <p>👤 {item.seller} • 🕐 {item.posted}</p>
+                  <p>👤 {item.seller} • 🕐 {formatTime(item.created_at)}</p>
                 </div>
 
-                <button className="btn-primary w-full text-sm py-2">
+                <a href={`tel:${item.contact}`} className="btn-primary w-full text-sm py-2 text-center block">
                   Message Seller
-                </button>
+                </a>
               </div>
             </div>
           ))}
         </div>
+
+        {filtered.length === 0 && (
+          <div className="card p-8 text-center text-gray-500">
+            No items listed yet. Got something to sell?
+          </div>
+        )}
 
         {/* Tips */}
         <div className="mt-12 card p-6 bg-amber-50/50">
