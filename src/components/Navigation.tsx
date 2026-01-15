@@ -5,11 +5,11 @@ import { useState } from "react";
 
 const navItems = [
   { href: "/", label: "Home", icon: "🏠" },
-  { href: "/jobs", label: "Jobs", icon: "💼" },
+  { href: "/community", label: "Community", icon: "🏄" },
   { href: "/businesses", label: "Directory", icon: "🏪" },
+  { href: "/jobs", label: "Jobs", icon: "💼" },
   { href: "/marketplace", label: "Market", icon: "🛒" },
   { href: "/emergency", label: "Emergency", icon: "🚨" },
-  { href: "/community", label: "Community", icon: "🏄" },
 ];
 
 export default function Navigation() {
